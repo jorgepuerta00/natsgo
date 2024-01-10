@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  nats-server:
+    image: nats:latest
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+    networks:
+      - nats-network
+
+  publisher:
+    build: ./path/to/publisher
+    depends_on:
+      - nats-server
+    environment:
+      - NATS_URL=nats://nats-server:4222
+    networks:
+      - nats-network
+
+  subscriber:
+    build: ./path/to/subscriber
+    depends_on:
+      - nats-server
+    environment:
+      - NATS_URL=nats://nats-server:4222
+    networks:
+      - nats-network
+
+networks:
+  nats-network:
+    driver: bridge
