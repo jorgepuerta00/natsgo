@@ -5,7 +5,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/jorgepuerta00/natsgo/publisher"
+	"github.com/jorgepuerta00/natsgo/pkg/publisher"
 
 	"github.com/nats-io/nats.go"
 )
