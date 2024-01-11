@@ -22,7 +22,7 @@ services:
       - "8080:8080"
     environment:
       NATS_URL: nats://demo.nats.io:4222
-      NATS_QUEUE: my-subject
+      NATS_SUBJECT: my-subject
       HTTP_PORT: 8080
     networks:
       - nats-network

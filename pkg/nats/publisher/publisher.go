@@ -19,6 +19,8 @@ type NATSPublisher struct {
 }
 
 func NewNATSPublisher(conn INATSConn, subject string) *NATSPublisher {
+	logrus.Infof("NATS subject: %s", subject)
+
 	return &NATSPublisher{
 		conn:    conn,
 		subject: subject,
