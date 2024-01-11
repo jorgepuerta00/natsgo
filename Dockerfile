@@ -1,15 +1,31 @@
-FROM golang:alpine
+# Use an image with Go 1.20 or later for the build stage
+FROM golang:latest AS build
 
-# Move to working directory /go/src/app
-WORKDIR /go/src/app
+# Set the working directory inside the container
+WORKDIR /app
 
-# Copy and download dependency using go mod
-COPY go.mod .
-COPY go.sum .
+# Copy the Go module files and download dependencies
+COPY go.* ./
 RUN go mod download
 
-# Copy the code into the container
+# Copy the application source code to the container
+# You need to copy the entire project since your main.go might depend on other packages within your project
 COPY . .
 
-# Command to run when starting the container
-CMD CGO_ENABLED=0 go test ./... -v -cover
+# Build the Go application - adjust the path to where main.go is located within your project structure
+RUN CGO_ENABLED=0 go build -o ordermanager ./cmd
+
+# Create a minimal runtime image
+FROM alpine:latest
+
+# Set the working directory inside the runtime container
+WORKDIR /app
+
+# Copy the built binary from the build stage to the runtime image
+COPY --from=build /app/ordermanager .
+
+# Expose the port your application listens on (adjust if necessary)
+EXPOSE 8080
+
+# Command to run your application
+CMD ["./ordermanager"]
