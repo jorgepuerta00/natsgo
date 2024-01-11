@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/nats-io/nats.go"
+	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -22,7 +23,7 @@ func (m *MockNATSConn) SubscribeSync(subject string) (*nats.Subscription, error)
 func TestSubscriber_SubscribeToQueue(t *testing.T) {
 	// Arrange
 	mockConn := new(MockNATSConn)
-	subscriber := NewSubscriber(mockConn)
+	subscriber := NewSubscriber(mockConn, logrus.New())
 	subject := "testSubject"
 	mockSubscription := new(nats.Subscription)
 
@@ -38,7 +39,7 @@ func TestSubscriber_SubscribeToQueue(t *testing.T) {
 func TestSubscriber_SubscribeToQueue_Error(t *testing.T) {
 	// Arrange
 	mockConn := new(MockNATSConn)
-	subscriber := NewSubscriber(mockConn)
+	subscriber := NewSubscriber(mockConn, logrus.New())
 	subject := "testSubject"
 	expectedErr := errors.New("subscribe error")
 

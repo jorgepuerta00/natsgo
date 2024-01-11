@@ -27,7 +27,7 @@ func init() {
 func TestNATSPublisher_PublishEvent(t *testing.T) {
 	// Arrange
 	mockConn := new(MockNATSConn)
-	publisher := NewNATSPublisher(mockConn, "testQueue")
+	publisher := NewNATSPublisher(mockConn, "testQueue", logrus.New())
 
 	event := model.Event{
 		OrderID: "123",
@@ -50,7 +50,7 @@ func TestNATSPublisher_PublishEvent(t *testing.T) {
 func TestNATSPublisher_PublishEvent_Error(t *testing.T) {
 	// Arrange
 	mockConn := new(MockNATSConn)
-	publisher := NewNATSPublisher(mockConn, "testQueue")
+	publisher := NewNATSPublisher(mockConn, "testQueue", logrus.New())
 
 	event := model.Event{
 		OrderID: "123",

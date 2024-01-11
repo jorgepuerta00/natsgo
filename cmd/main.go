@@ -59,7 +59,7 @@ func initializeNATSPublisher() publisher.Publisher {
 		logger.Fatalf("Error connecting to NATS: %v", err)
 	}
 
-	return publisher.NewNATSPublisher(conn, natsSubject)
+	return publisher.NewNATSPublisher(conn, natsSubject, logger)
 }
 
 func initializeNatSubscriber() subscriber.Subscriber {
@@ -73,7 +73,7 @@ func initializeNatSubscriber() subscriber.Subscriber {
 		logger.Fatalf("Error connecting to NATS: %v", err)
 	}
 
-	return subscriber.NewSubscriber(conn)
+	return subscriber.NewSubscriber(conn, logger)
 }
 
 func createOrderHandler(publisher publisher.Publisher) http.HandlerFunc {

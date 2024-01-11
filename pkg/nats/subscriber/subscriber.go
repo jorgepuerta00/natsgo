@@ -9,20 +9,24 @@ type Subscriber interface {
 }
 
 type NATSSubscriber struct {
-	conn INATSConn
+	conn   INATSConn
+	logger logrus.FieldLogger
 }
 
-func NewSubscriber(conn INATSConn) *NATSSubscriber {
-	logrus.Info("Subscriber created")
-	return &NATSSubscriber{conn: conn}
+func NewSubscriber(conn INATSConn, logger logrus.FieldLogger) *NATSSubscriber {
+	logger.Infof("Subscriber created")
+	return &NATSSubscriber{
+		conn:   conn,
+		logger: logger,
+	}
 }
 
 func (s *NATSSubscriber) SubscribeToSubject(subject string) error {
 	_, err := s.conn.SubscribeSync(subject)
 	if err != nil {
-		logrus.Errorf("Failed to subscribe to subject %s: %v", subject, err)
+		s.logger.Errorf("Failed to subscribe to subject %s: %v", subject, err)
 		return err
 	}
-	logrus.Infof("Subscribed to subject %s", subject)
+	s.logger.Infof("Subscribed to subject %s", subject)
 	return nil
 }
