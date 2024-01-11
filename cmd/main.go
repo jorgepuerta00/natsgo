@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/jorgepuerta00/natsgo/pkg/model"
 	"github.com/jorgepuerta00/natsgo/pkg/nats/publisher"
@@ -44,26 +45,33 @@ func main() {
 
 	// Keep the application running to handle NATS messages
 	logger.Debug("Application running...")
-
 	select {}
 }
 
 func initializeNATSPublisher() publisher.Publisher {
-	conn, err := nats.Connect(natsURL)
+	opts := nats.GetDefaultOptions()
+	opts.Url = natsURL
+	opts.MaxReconnect = -1
+	opts.ReconnectWait = 2 * time.Second
+
+	conn, err := opts.Connect()
 	if err != nil {
 		logger.Fatalf("Error connecting to NATS: %v", err)
 	}
-	defer conn.Close()
 
 	return publisher.NewNATSPublisher(conn, natsSubject)
 }
 
 func initializeNatSubscriber() subscriber.Subscriber {
-	conn, err := nats.Connect(natsURL)
+	opts := nats.GetDefaultOptions()
+	opts.Url = natsURL
+	opts.MaxReconnect = -1
+	opts.ReconnectWait = 2 * time.Second
+
+	conn, err := opts.Connect()
 	if err != nil {
 		logger.Fatalf("Error connecting to NATS: %v", err)
 	}
-	defer conn.Close()
 
 	return subscriber.NewSubscriber(conn)
 }

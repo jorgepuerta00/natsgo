@@ -19,7 +19,7 @@ type NATSPublisher struct {
 }
 
 func NewNATSPublisher(conn INATSConn, subject string) *NATSPublisher {
-	logrus.Infof("NATS subject: %s", subject)
+	logrus.Infof("publisher created NATS subject: %s", subject)
 
 	return &NATSPublisher{
 		conn:    conn,
@@ -33,6 +33,8 @@ func (p *NATSPublisher) PublishEvent(event model.Event) error {
 		logrus.WithError(err).Error("Failed to marshal event")
 		return err
 	}
+
+	logrus.Infof("order received: %s", event.OrderID)
 
 	err = p.conn.Publish(p.subject, eventJSON)
 	if err != nil {

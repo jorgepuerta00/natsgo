@@ -13,15 +13,16 @@ type NATSSubscriber struct {
 }
 
 func NewSubscriber(conn INATSConn) *NATSSubscriber {
+	logrus.Info("Subscriber created")
 	return &NATSSubscriber{conn: conn}
 }
 
 func (s *NATSSubscriber) SubscribeToSubject(subject string) error {
 	_, err := s.conn.SubscribeSync(subject)
 	if err != nil {
-		logrus.Errorf("Failed to subscribe to queue %s: %v", subject, err)
+		logrus.Errorf("Failed to subscribe to subject %s: %v", subject, err)
 		return err
 	}
-	logrus.Infof("Subscribed to queue %s", subject)
+	logrus.Infof("Subscribed to subject %s", subject)
 	return nil
 }
